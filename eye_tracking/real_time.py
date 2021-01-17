@@ -6,9 +6,9 @@ gaze = GazeTracking()
 import csv
 
 #config 
-input_file = "" #path to input video
-filename = "data/test1.csv" #used of data
-debug = False
+input_file = "demo_videos/linh.mp4" #path to input video
+filename = "data/data_set_1.csv" #used of data
+debug = True
 frames_of_interest = (10,200)
 cap = cv2.VideoCapture(input_file)
 
@@ -17,7 +17,7 @@ detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
 #save data 
-data = []
+DATA_POINTS = []
 fcnt = 0
 
 """
@@ -70,12 +70,18 @@ while True:
             y2 = face.bottom()
             cv2.rectangle(frame, (x1-10, y1-10), (x2+10, y2+10), (0, 255, 0), 2)
 
+            # We send this frame to GazeTracking to analyze it
+            gaze.refresh(frame)
+            left_pupil = gaze.pupil_left_coords()
+            right_pupil = gaze.pupil_right_coords()
+
             #find landmarks within the face area
             landmarks = predictor(frame, face)
             for n in range(36, 47):
                 x = landmarks.part(n).x
                 y = landmarks.part(n).y
-                cv2.circle(frame, (x, y), 2, (255, 0, 0), -1)
+                if debug: 
+                    cv2.circle(frame, (x, y), 2, (255, 0, 0), -1)
 
             #find landmarks within the face area
             landmarks = predictor(frame,face)
@@ -86,23 +92,21 @@ while True:
             point_42 = landmarks.part(42)
             point_45 = landmarks.part(45)
 
-            # We send this frame to GazeTracking to analyze it
-            gaze.refresh(frame)
-            left_pupil = gaze.pupil_left_coords()
-            right_pupil = gaze.pupil_right_coords()
-
-            looking_dir_left_eye = relative_position_between_points(point_36,left_pupil,point_39)
-            looking_dir_right_eye = relative_position_between_points(point_42,right_pupil,point_45)
 
             #collect data 
-            log_eye_data(fcnt, looking_dir_left_eye, looking_dir_right_eye, data)
+            looking_dir_left_eye = relative_position_between_points(point_36,left_pupil,point_39)
+            looking_dir_right_eye = relative_position_between_points(point_42,right_pupil,point_45)
+            log_eye_data(fcnt, looking_dir_left_eye, looking_dir_right_eye, DATA_POINTS)
 
-            
-            
+            if not debug: 
+                cv2.circle(frame, left_pupil, 10, (220, 0, 0), 1)
+                cv2.circle(frame, right_pupil, 10, (220, 0, 0), 1)
+
             if debug:
-                cv2.line(frame,(point_36.x, point_36.y),(point_39.x,point_39.y),(0,200,0),4)
-                cv2.circle(frame, left_pupil, 2, (200, 200, 0), 1)
-                cv2.circle(frame, right_pupil, 2, (200, 200, 0), 1)
+                cv2.line(frame,(point_36.x, point_36.y),(point_39.x,point_39.y),(0,200,0),1)
+                cv2.line(frame,(point_42.x, point_39.y),(point_45.x,point_45.y),(0,200,0),1)
+                cv2.circle(frame, left_pupil, 5, (250, 200, 0), 1)
+                cv2.circle(frame, right_pupil, 5, (250, 200, 0), 1)
                 print(relative_position_between_points(point_36,left_pupil,point_39))
 
         cv2.imshow("Frame", frame)
@@ -121,5 +125,5 @@ print("script ended")
 
 #save data
 if input("save data [y/n]:  ")[0].lower() == "y":
-    save_log(filename,data)
+    save_log(filename,DATA_POINTS)
     print(f"saved under {filename}")
