@@ -1,8 +1,8 @@
 #ffmpeg -i test/video2.mp4 -vf scale=480:320 test/output_320.mp4
 import cv2
 import os
-input_file = ""
-output_file = ""
+input_file = "demo_videos/linh.mp4"
+output_file = "resized_videos/linh.mp4"
 dimentions = (400,640)
 #resize command
 command = F"ffmpeg -i {input_file} -vf scale={dimentions[0]}:{dimentions[1]} {output_file}"
