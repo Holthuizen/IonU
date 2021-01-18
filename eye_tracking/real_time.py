@@ -1,30 +1,41 @@
 import cv2
-import numpy as np
+import csv
 import dlib
 from gaze_tracking import GazeTracking
 gaze = GazeTracking()
-import csv
 
-#config 
+#GLOBALS:
+
+#CONFIG 
 input_file = "demo_videos/linh.mp4" #path to input video
 filename = "data/data_set_1.csv" #used of data
 debug = True
-frames_of_interest = (10,200)
-cap = cv2.VideoCapture(input_file)
+frames_of_interest = (10,300)
+cap = cv2.VideoCapture(input_file) #comment out when using webcame
+#cap = cv2.VideoCapture(0) # comment in when using webcame
+
+# estimated looking direction: RIGHT, LEFT, CENTER
+looking_dir = 'CENTER'
+
+#save data 
+DATA_POINTS = []
+fcnt = 0
 
 #dlib models
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor("shape_predictor_68_face_landmarks.dat")
 
-#save data 
-DATA_POINTS = []
-fcnt = 0
+
+#functions: 
 
 """
     relative position of point B between 2 points A and C
     A < B and B < C
 """
 def relative_position_between_points(A,B,C):
+    if not B:
+        print("error pupil not found in frame")
+        return -1
     x_delta_AC = C.x - A.x
     x_delta_AB = B[0] - A.x
     if x_delta_AC > x_delta_AB: 
@@ -33,15 +44,24 @@ def relative_position_between_points(A,B,C):
         print("error false coordinates in frame")
         return -1
 
+'''transforms 2 values between 0 and 1 into one off 3 discreed values LEFT,RIGHT,CENTER'''
+def estimate_lookin_dir(relative_pos_left_iris,relative_pos_right_iris ): 
+    _avg = (relative_pos_left_iris + relative_pos_right_iris)/2 
+    if _avg > 0.60: 
+        return "LEFT"
+    if _avg < 0.40: 
+        return "RIGHT"
+    else: 
+        return "CENTER"
+
+
 """logs data to an specified list"""
-def log_eye_data(current_frame_count, looking_direction_left_eye, looking_direction_right_eye, data_log):
-    data_log.append(
-        {'frame':current_frame_count,'L':looking_direction_left_eye, 'R':looking_direction_right_eye}
-    )
+def log_eye_data(current_frame_count, looking_direction_left_eye, looking_direction_right_eye, looking_dir, data_log):
+    data_log.append( {'frame':current_frame_count,'L':looking_direction_left_eye, 'R':looking_direction_right_eye, 'avg_looking_dir':looking_dir} )
 
 ''' write log to file'''
 def save_log(filename,dict_data):
-    csv_columns = ['frame','L','R']
+    csv_columns = ['frame','L','R','avg_looking_dir']
     try:
         with open(filename, 'w') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=csv_columns)
@@ -96,7 +116,10 @@ while True:
             #collect data 
             looking_dir_left_eye = relative_position_between_points(point_36,left_pupil,point_39)
             looking_dir_right_eye = relative_position_between_points(point_42,right_pupil,point_45)
-            log_eye_data(fcnt, looking_dir_left_eye, looking_dir_right_eye, DATA_POINTS)
+            looking_dir = estimate_lookin_dir(looking_dir_left_eye,looking_dir_right_eye)
+            log_eye_data(fcnt, looking_dir_left_eye, looking_dir_right_eye, looking_dir, DATA_POINTS)
+           
+
 
             if not debug: 
                 cv2.circle(frame, left_pupil, 10, (220, 0, 0), 1)
@@ -107,6 +130,8 @@ while True:
                 cv2.line(frame,(point_42.x, point_39.y),(point_45.x,point_45.y),(0,200,0),1)
                 cv2.circle(frame, left_pupil, 5, (250, 200, 0), 1)
                 cv2.circle(frame, right_pupil, 5, (250, 200, 0), 1)
+                cv2.putText(frame, looking_dir, (90, 60), cv2.FONT_HERSHEY_DUPLEX, 1.6, (147, 58, 31), 2)
+
                 print(relative_position_between_points(point_36,left_pupil,point_39))
 
         cv2.imshow("Frame", frame)
