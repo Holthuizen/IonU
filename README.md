@@ -15,8 +15,8 @@ M6 Project, software for eye tracking and data logging
 
 ## requirements: 
 
-python 3.6.8 https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe 
-pipenv ```pip install pipenv``` 
+- python 3.6.8 https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe 
+- pipenv ```pip install pipenv``` 
 
 
 ## setup instructions: 
