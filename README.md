@@ -20,16 +20,13 @@ pipenv ```pip install pipenv```
 
 
 ## setup instructions: 
-download the repossitory
-open eye_tracking 
-
-download dependencys by running: 
-```pipenv install ```
-[check for errors]
-
-[optional] open real_time.py and change settings
-
-run script with: 
+- download the repossitory
+- open eye_tracking 
+- download dependencys by running: 
+```pipenv install ```  
+ [check for errors]
+- [optional] open real_time.py and change settings
+- run script with: 
 ```pipenv run real_time.py ```
 
 
