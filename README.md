@@ -8,10 +8,8 @@ M6 Project, software for eye tracking and data logging
 
 
 
-
 ## Motivation 
 ...
-
 
 ## requirements: 
 
@@ -20,15 +18,14 @@ M6 Project, software for eye tracking and data logging
 
 
 ## setup instructions: 
-- download the repossitory
+- download the repository
 - open eye_tracking 
-- download dependencys by running: 
+- download dependencies by running: 
 ```pipenv install ```  
  [check for errors]
 - [optional] open real_time.py and change settings
 - run script with: 
 ```pipenv run real_time.py ```
-
 
 ## Resources: 
 Dlib: 
