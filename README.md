@@ -4,7 +4,7 @@
 M6 Project, software for eye tracking and data logging 
 #using opencv and dlib face recognition and object recognition. 
 
-![Alt Text](https://github.com/Holthuizen/IonU/blob/main/demo.gif)
+![](https://github.com/Holthuizen/IonU/blob/main/demo.gif)
 
 
 
