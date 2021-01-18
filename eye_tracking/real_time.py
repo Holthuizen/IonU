@@ -7,12 +7,16 @@ gaze = GazeTracking()
 #GLOBALS:
 
 #CONFIG 
-input_file = "demo_videos/linh.mp4" #path to input video
+webcame = False
+
 filename = "data/data_set_1.csv" #used of data
 debug = True
 frames_of_interest = (10,300)
-cap = cv2.VideoCapture(input_file) #comment out when using webcame
-#cap = cv2.VideoCapture(0) # comment in when using webcame
+if webcame:
+    cap = cv2.VideoCapture(0) 
+else: 
+    input_file = "demo_videos/linh.mp4" #path to input video
+    cap = cv2.VideoCapture(input_file) 
 
 # estimated looking direction: RIGHT, LEFT, CENTER
 looking_dir = 'CENTER'
