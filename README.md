@@ -11,13 +11,13 @@ M6 Project, software for eye tracking and data logging
 ## Motivation 
 We required a method to log the eye moventen en looking direction while using a driving simulator. 
 
-## requirements: 
+## Requirements: 
 
 - python 3.6.8 https://www.python.org/ftp/python/3.6.8/python-3.6.8-amd64.exe 
 - pipenv ```pip install pipenv``` 
 
 
-## setup instructions: 
+## Setup instructions: 
 - download the repository
 - open eye_tracking 
 - download dependencies by running: 
