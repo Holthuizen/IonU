@@ -1,8 +1,8 @@
-# IonU
+# IonU face recognition and object recognition. 
 **group 26**
 
 M6 Project, software for eye tracking and data logging 
-#using opencv and dlib face recognition and object recognition. 
+#using opencv and dlib. 
 
 ![](https://github.com/Holthuizen/IonU/blob/main/demo.gif)
 
