@@ -9,7 +9,7 @@ M6 Project, software for eye tracking and data logging
 
 
 ## Motivation 
-We required a method to log the eye moventen en looking direction while using a driving simulator. 
+We required a method to log the eye moventen & looking direction while using a driving simulator. 
 
 ## Requirements: 
 
